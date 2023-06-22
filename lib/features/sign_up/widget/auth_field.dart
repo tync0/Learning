@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 class AuthField extends StatefulWidget {
   final String fieldTitle;
   final bool isPasswordField;
-
+  final TextEditingController? controller;
   const AuthField({
     super.key,
     required this.fieldTitle,
     this.isPasswordField = false,
+    this.controller,
   });
 
   @override
@@ -26,6 +27,7 @@ class _AuthFieldState extends State<AuthField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       obscureText: widget.isPasswordField ? _obsecureText : false,
       cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(

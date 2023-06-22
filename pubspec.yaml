@@ -46,6 +46,7 @@ dependencies:
   d_chart: ^2.2.11
   shared_preferences: ^2.1.2
   just_audio: ^0.9.34
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

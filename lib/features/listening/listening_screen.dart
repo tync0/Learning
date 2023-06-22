@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:just_audio/just_audio.dart';
 
 @RoutePage()
 class ListeningScreen extends StatefulWidget {
@@ -12,6 +13,50 @@ class ListeningScreen extends StatefulWidget {
 }
 
 class _ListeningScreenState extends State<ListeningScreen> {
+  final AudioPlayer audioPlayer = AudioPlayer();
+  bool isPlaying = false;
+  double _sliderValue = 0;
+  String _durationString = '';
+
+  setAudio() async {
+    await audioPlayer.setAsset('assets/listening.m4a');
+    await audioPlayer.load();
+    setState(() {
+      _durationString = formatTime(audioPlayer.duration ?? Duration.zero);
+    });
+  }
+
+  @override
+  void initState() {
+    setAudio();
+    audioPlayer.setLoopMode(LoopMode.all);
+    audioPlayer.positionStream.listen((position) {
+      setState(() {
+        _sliderValue = position.inMilliseconds.toDouble();
+      });
+    });
+    audioPlayer.playerStateStream.listen((playerState) {
+      if (playerState == PlayerState(true, ProcessingState.completed)) {
+        setState(() {
+          audioPlayer.stop();
+          isPlaying = false;
+          _sliderValue = 0;
+          audioPlayer.dispose();
+        });
+      }
+    });
+    audioPlayer.playingStream.listen((event) {
+      isPlaying = event;
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
   final List<String> _sentences = [
     "The weather is nice today.",
     "I enjoy playing the guitar.",
@@ -124,28 +169,25 @@ class _ListeningScreenState extends State<ListeningScreen> {
                 },
               ),
             ),
-            // Slider(
-            //   activeColor: Colors.white,
-            //   inactiveColor: Colors.grey[800],
-            //   min: 0,
-            //   max: duration.inSeconds.toDouble(),
-            //   value: position.inSeconds.toDouble(),
-            //   onChanged: (value) async {
-            //     final position = Duration(seconds: value.toInt());
-            //     await audioPlayer.seek(position);
-            //     await audioPlayer.resume();
-            //   },
-            // ),
+            Slider(
+              min: 0,
+              max: audioPlayer.duration?.inMilliseconds.toDouble() ?? 0,
+              value: _sliderValue,
+              onChanged: (value) async {
+                final position = Duration(milliseconds: value.round());
+                await audioPlayer.seek(position);
+              },
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '',
-                  style: const TextStyle(color: Colors.white),
+                  formatTime(Duration(milliseconds: _sliderValue.round())),
+                  style: const TextStyle(color: Colors.black),
                 ),
                 Text(
-                  '',
-                  style: const TextStyle(color: Colors.white),
+                  _durationString,
+                  style: const TextStyle(color: Colors.black),
                 ),
               ],
             ),
@@ -157,16 +199,17 @@ class _ListeningScreenState extends State<ListeningScreen> {
                 children: [
                   IconButton(
                     onPressed: () async {
-                      // if (isPlaying) {
-                      //   await audioPlayer.pause();
-                      // } else {
-                      //   await audioPlayer.play(UrlSource('url'));
-                      // }
+                      if (isPlaying) {
+                        await audioPlayer.pause();
+                      } else {
+                        await audioPlayer.play();
+                      }
                     },
-                    icon:
-                        Icon(color: Colors.grey[800], size: 30, Icons.play_arrow
-                            //isPlaying ? Icons.pause : ,
-                            ),
+                    icon: Icon(
+                      color: Colors.grey[800],
+                      size: 30,
+                      isPlaying ? Icons.pause : Icons.play_arrow,
+                    ),
                   ),
                   SizedBox(width: 32.h),
                   ElevatedButton(

@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           SizedBox(width: 10.w),
-                          Text('Hello', style: Utils.titleTextStyle),
+                          Text('Hello Asmar', style: Utils.titleTextStyle),
                         ],
                       ),
                       SvgPicture.asset(

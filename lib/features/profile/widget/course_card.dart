@@ -17,7 +17,7 @@ class CourseCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Kurs Adı",
+              "France",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

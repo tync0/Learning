@@ -17,9 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Düğmeye tıklandığında gerçekleştirilecek işlemler
-        },
+        onPressed: () {},
         backgroundColor: Colors.greenAccent,
         child: const Icon(Icons.edit),
       ),
@@ -35,30 +33,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 50.h,
+                    height: 20.h,
                   ),
                   Text(
                     "Profile",
                     style: TextStyle(fontSize: 20.sp),
                   ),
                   SizedBox(
-                    height: 50.h,
+                    height: 20.h,
                   ),
                   Container(
                     alignment: Alignment.center,
-                    width: 200.w,
-                    height: 200.w,
+                    width: 100.w,
+                    height: 100.w,
                     decoration: const BoxDecoration(
-                        color: Colors.greenAccent,
-                        shape: BoxShape
-                            .circle // Yuvarlak şekli için BoxShape.circle kullanılıyor
-                        ),
+                      color: Colors.greenAccent,
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: AssetImage('assets/pp.png'), fit: BoxFit.fill),
+                    ),
                   ),
                   SizedBox(
                     height: 25.h,
                   ),
                   Text(
-                    "Child's Name",
+                    "Asmar",
                     style: TextStyle(fontSize: 18.sp),
                   ),
                   SizedBox(
